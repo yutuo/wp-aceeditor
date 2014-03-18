@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP AceEditor\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-28 14:53+0900\n"
+"PO-Revision-Date: 2013-01-28 14:54+0900\n"
+"Last-Translator: yutuo <yutuo5@gmail.com>\n"
+"Language-Team: yutuo <yutuo5@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-Basepath: C:\\XiangQf\\30_MyData\\99_WWW\\wordpress\\wp-content"
+"\\plugins\\wp-aceeditor\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: wp_aceeditor.php:53 inc/wp_aceeditor_setting.php:31
+msgid "Wp-AceEditor"
+msgstr "AceEditor语法高亮"
+
+#: wp_aceeditor.php:60 inc/wp_aceeditor_setting.php:35
+msgid "Settings"
+msgstr "设置"
+
+#: inc/wp_aceeditor_setting.php:34
+msgid ""
+"Ace Editor is a fully functional self-contained code syntax highlighter "
+"developed in JavaScript."
+msgstr "Ace Editor是一套在浏览器上对各种代码进行语法着色的独立 JavaScript 库。"
+
+#: inc/wp_aceeditor_setting.php:36
+msgid "Please enter your default config."
+msgstr "请输入您的默认配置。"
+
+#: inc/wp_aceeditor_setting.php:37
+msgid "You can set options in post content. Format is(Case-insensitive):"
+msgstr "您也能通过代码来自定义配置。格式如下（不区分大小写）："
+
+#: inc/wp_aceeditor_setting.php:40
+msgid "Your codes"
+msgstr "您的代码"
+
+#: inc/wp_aceeditor_setting.php:46
+msgid "Code theme"
+msgstr "代码风格"
+
+#: inc/wp_aceeditor_setting.php:59
+msgid "Font size"
+msgstr "字体大小"
+
+#: inc/wp_aceeditor_setting.php:67
+msgid "Trim space line"
+msgstr "去掉空行"
+
+#: inc/wp_aceeditor_setting.php:75
+msgid "Tab size"
+msgstr "Tab宽度"
+
+#: inc/wp_aceeditor_setting.php:83
+msgid "Tab to space"
+msgstr "制表符转换为空格"
+
+#: inc/wp_aceeditor_setting.php:91
+msgid "Auto wrap"
+msgstr "自动换行"
+
+#: inc/wp_aceeditor_setting.php:95
+msgid "Chars"
+msgstr "字符"
+
+#: inc/wp_aceeditor_setting.php:99
+msgid "Show Indent Guides"
+msgstr "显示缩进提示条"
+
+#: inc/wp_aceeditor_setting.php:107
+msgid "Show Gutter"
+msgstr "显示侧边栏"
+
+#: inc/wp_aceeditor_setting.php:115
+msgid "Folding Style"
+msgstr "收缩样式"
+
+#: inc/wp_aceeditor_setting.php:118
+msgid "none"
+msgstr "不收缩"
+
+#: inc/wp_aceeditor_setting.php:125
+msgid "Code fold on load"
+msgstr "加载后收缩代码"
+
+#: inc/wp_aceeditor_setting.php:133
+msgid "Highlight Active Line"
+msgstr "高亮当前行"
+
+#: inc/wp_aceeditor_setting.php:142
+msgid "Save Changes"
+msgstr "保存更改"
+
+#: inc/wp_aceeditor_setting.php:145
+msgid "Preview"
+msgstr "预览"
+
+#: inc/wp_aceeditor_setting.php:146
+msgid "You can input source to preview the result."
+msgstr "您可以输入代码，预览结果。"
+
+#: inc/wp_aceeditor_setting.php:149
+msgid "Language"
+msgstr "语言"
