@@ -25,7 +25,7 @@ var WpAceEditor = function(options) {
             }
         }
         return result;
-    }
+    };
     /** 取得HTML设置的属性 */
     this.getHtmlOptions = function(item) {
         var getAllAttr = function (htmlItem) {
@@ -35,7 +35,7 @@ var WpAceEditor = function(options) {
                 result[attr.name] = attr.value;
             }
             return result;
-        }
+        };
 
         var result = [];
         var allAttr = getAllAttr(item[0]);
@@ -59,12 +59,12 @@ var WpAceEditor = function(options) {
         }
 
         return result;
-    }
+    };
     /** 转换所有项目 */
     this.convertAll = function() {
         var items = this.matchAllItems();
 
-        for (i = 0; i < items.length; i++) {
+        for (var i = 0; i < items.length; i++) {
             var item = items.eq(i);
             if (typeof(item.attr(this.ITEM_KEY)) !== 'undefined') {
                 return;
@@ -80,7 +80,7 @@ var WpAceEditor = function(options) {
         }
 
         window.setTimeout(delay, 30);
-    }
+    };
     /** 取得所有要转换的项目 */
     this.matchAllItems = function() {
         var matchString = '';
@@ -94,20 +94,19 @@ var WpAceEditor = function(options) {
             }
         }
         return this.$(matchString);
-    }
+    };
     /** 重新转换 */
     this.reConvertItem = function(item) {
         var convid = item.attr(this.ITEM_KEY);
         var options = this.getOptions(item);
 
         var editor;
-        var divItem;
         if (typeof(convid) === 'undefined') {
             this.convertedCount++;
             convid = '' + this.convertedCount;
             item.attr(this.ITEM_KEY, convid);
 
-            var divItem = $('<div></div>');
+            var divItem = this.$('<div></div>');
             divItem.attr('id', this.DIV_KEY + convid);
             // 宽度
             divItem.css('width', options['width']);
@@ -116,14 +115,12 @@ var WpAceEditor = function(options) {
             divItem.css('position', 'relative');
             divItem.css('text-shadow', 'none');
             item.after(divItem);
-
             editor = ace.edit(divItem.get(0));
-            editor.getSession().setUseWrapMode(false);
+
             this.convertedEditor[convid] = editor;
 
-            var value = item.text();
             var value = item.text().replace(/^(\s*?[\r\n]+)+/, '');
-            value = value.replace(/\s+$/, '')
+            value = value.replace(/\s+$/, '');
             if (options['tabtospace']) {
                 value = value.replace(/\t/, '    ');
             }
@@ -133,7 +130,7 @@ var WpAceEditor = function(options) {
             divItem.show();
         } else {
             editor = this.convertedEditor[convid];
-            divItem = $('#' + this.DIV_KEY + convid);
+            divItem = this.$('#' + this.DIV_KEY + convid);
         }
         // 设置属性
         this.resetOptions(editor, options);
@@ -141,7 +138,7 @@ var WpAceEditor = function(options) {
         this.delayFunctions[convid] = this.resizeEditor(divItem, editor, options);
 
         return editor;
-    }
+    };
     /** 重新设置属性 */
     this.resetOptions = function(editor, options) {
         // 代码只读
@@ -154,10 +151,10 @@ var WpAceEditor = function(options) {
         editor.getSession().setTabSize(options['tabsise']);
         // 文字大小
         editor.setFontSize(options['fontsize']);
+        // 自动换行
+        editor.getSession().setUseWrapMode(options['wrap']);
         // 打印边界大小
-        if (options['wrap'] > 0) {
-            editor.renderer.setPrintMarginColumn(options['wrap']);
-        }
+        editor.renderer.setPrintMarginColumn(options['print']);
         // 默认收缩
         if (options['foldstyle'] != 'manual' && options['fold']) {
             editor.getSession().foldAll();
@@ -172,41 +169,40 @@ var WpAceEditor = function(options) {
         editor.getSession().setFoldStyle(options['foldstyle']);
 
         return editor;
-    }
+    };
 
     /** 重新设置高度 */
     this.resizeEditor = function  (divItem, editor, options) {
         var changeHeight = function(height) {
-            if (typeof(this.$.browser.mozilla) !== 'undefined') {
+            if (typeof(jQuery.browser.mozilla) !== 'undefined') {
                 return height + 1;
             } else {
                 return height;
             }
-        }
+        };
 
         var lineHeight = Math.round(options['fontsize'] * options['lineheight'] / 100);
-        var scrollBarWidth = editor.renderer.scrollBar.getWidth();
         var oldHeight = editor.getSession().getScreenLength() * lineHeight;
         oldHeight = changeHeight(oldHeight);
 
-
         var resize = function() {
+            var lineHeight = Math.round(options['fontsize'] * options['lineheight'] / 100);
             var newHeight = editor.getSession().getScreenLength() * lineHeight;
             if (editor.renderer.$horizScroll) {
-                newHeight += scrollBarWidth;
+                newHeight += editor.renderer.scrollBarH.height;
             }
             newHeight = changeHeight(newHeight);
+
             if (oldHeight !== newHeight) {
                 oldHeight = newHeight;
                 divItem.height(newHeight);
                 editor.resize();
             }
-        }
-
+        };
 
         var resizedelay = function() {
-            window.setTimeout(resize, 30);
-        }
+            window.setTimeout(resize, 20);
+        };
 
         divItem.height(oldHeight);
         editor.resize();
@@ -215,8 +211,36 @@ var WpAceEditor = function(options) {
         editor.getSession().on('changeFold', resizedelay);
 
         return resize;
-    }
+    };
 
+    this.convertHtml = function(inserttag, inserttype, options, value) {
+        var result = '<' + inserttag;
+        if (inserttype === 'lang') {
+            for (var key in options) {
+                result += ' ' + key + '="' + options[key] + '"';
+            }
+        } else if (inserttype === 'data-wpae') {
+            result += ' data-wpae="';
+            for (var key in options) {
+                result += key + ':' + options[key] + ';';
+            }
+            result += '"';
+        } else if (inserttype === 'data-wpae-lang') {
+            for (var key in options) {
+                result += ' data-wpae-' + key + '="' + options[key] + '"';
+            }
+        }
+        result += '>\n';
+        result += this.htmlEncode(value);
+        result += '\n</' + inserttag + '>';
+        return result;
+    };
+
+    this.htmlEncode = function (value) {
+        var div = document.createElement("div");
+        div.appendChild(document.createTextNode(value));
+        return div.innerHTML;
+    };
 
     this.changeOptions = new function() {
         this.__int = function (value) {
@@ -224,6 +248,9 @@ var WpAceEditor = function(options) {
             return isNaN(returnVal) ? null : returnVal;
         };
         this.__boolean = function (value) {
+            if (typeof(value) === 'boolean') {
+                return value;
+            }
             value = value.toLowerCase();
             return ['1', 'yes', 'true'].indexOf(value) >= 0;
         };
@@ -243,7 +270,7 @@ var WpAceEditor = function(options) {
             if (value == 'c' || value == 'cpp') {
                 value = 'c_cpp';
             } else if (value == 'dos') {
-                value = 'batchfile'
+                value = 'batchfile';
             }
             return value;
         };
@@ -253,8 +280,10 @@ var WpAceEditor = function(options) {
         this.lineheight = this.__int;
         // 文字大小
         this.fontsize = this.__int;
+        // 自动换行
+        this.wrap = this.__boolean;
         // 打印边界大小
-        this.wrap = this.__int;
+        this.print = this.__int;
         // 显示宽度
         this.width = this.__value;
         // Tab转换成空格显示
@@ -277,9 +306,9 @@ var WpAceEditor = function(options) {
             } else {
                 return valueList[Math.floor(index / 2) * 2 + 1];
             }
-        }
-    }
-}
+        };
+    };
+};
 
 
 function convertToAceEditor(options) {

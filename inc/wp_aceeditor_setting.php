@@ -5,8 +5,8 @@ $current_path = get_option('siteurl') . '/wp-content/plugins/' . $plugin_folder_
 if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
     $postOptions = $_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY];
 
-    $int_items = array ('fontsize', 'tabsize', 'wrap', 'gutter', 'fold', 'active');
-    $boolean_items = array ('tabtospace', 'indent');
+    $int_items = array ('lineheight', 'fontsize', 'tabsize', 'wrap');
+    $boolean_items = array ('tabtospace', 'indent', 'gutter', 'fold', 'active');
     $array_items = array ('convtag', 'convtype');
     foreach ($postOptions as $key => $value) {
         if (in_array($key, $int_items)) {
@@ -56,6 +56,12 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
                         <?PHP $this->optionsHtml($this->options['inserttype'], WpAceeditorConfig::$TYPES)?>
                     </select></td>
                 </tr>
+                <tr>
+                    <th scope="row"><?PHP echo __('Display width', 'wp_ae') ?></th>
+                    <td>
+                        <input name="wp_ae_options[width]" id="width" value="<?PHP echo $this->options['width']; ?>"/>
+                    </td>
+                </tr>
             </table>
 
             <h3><?PHP echo __('Settings', 'wp_ae') ?></h3>
@@ -80,6 +86,12 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
                     </select></td>
                 </tr>
                 <tr>
+                    <th scope="row"><?PHP echo __('Line height', 'wp_ae') ?>(lineheight)</th>
+                    <td><select name="wp_ae_options[lineheight]" id="lineheight">
+                            <?PHP $this->optionsHtml($this->options['lineheight'], WpAceeditorConfig::$LINE_HEIGHT)?>
+                        </select>%</td>
+                </tr>
+                <tr>
                     <th scope="row"><?PHP echo __('Font size', 'wp_ae') ?>(fontsize)</th>
                     <td><select name="wp_ae_options[fontsize]" id="fontsize">
                             <?PHP $this->optionsHtml($this->options['fontsize'], WpAceeditorConfig::$FONT_SIZE)?>
@@ -100,7 +112,14 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
                 <tr>
                     <th scope="row"><?PHP echo __('Auto wrap', 'wp_ae') ?>(wrap)</th>
                     <td><select name="wp_ae_options[wrap]" id="wrap">
-                            <?PHP $this->optionsHtml($this->options['wrap'], WpAceeditorConfig::$WRAP)?>
+                            <?PHP $this->optionsHtml($this->options['wrap'], WpAceeditorConfig::$BOOLEAN)?>
+                        </select><?PHP echo __('Chars', 'wp_ae')?>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><?PHP echo __('Print margin Column', 'wp_ae') ?>(wrap)</th>
+                    <td><select name="wp_ae_options[print]" id="print">
+                            <?PHP $this->optionsHtml($this->options['print'], WpAceeditorConfig::$PRINT)?>
                         </select><?PHP echo __('Chars', 'wp_ae')?>
                     </td>
                 </tr>
@@ -141,6 +160,8 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
             </p>
         </form>
         <h3><?PHP echo __('Preview', 'wp_ae') ?></h3>
+        <p><?PHP echo __('You insert source as this.', 'wp_ae') ?></p>
+        <pre id="sourcePreview" style="width: 98%"></pre>
         <p><?PHP echo __('You can input source to preview the result.', 'wp_ae') ?></p>
         <table class="form-table">
             <tr>
@@ -150,7 +171,11 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
                     </select></td>
             </tr>
         </table>
-        <pre id="testAceEditor" style="width: 98%">var i;</pre>
+        <pre id="testAceEditor" style="width: 98%">var func = function() {
+    console.log("Hello, world!");
+}
+func();
+</pre>
     </div>
 </div>
 
@@ -160,21 +185,38 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
     src="<?PHP echo $current_path ?>/js/wpaceeditor.js"></script>
 <script type="text/javascript">
     var editor = null;
+    var wpAceEditor = null;
     function setEditorHighLight() {
         var $ = jQuery;
         var options = {};
-        options['readOnly'] = false;
+        options['readonly'] = false;
+        options['width'] = '99%';
+        if (wpAceEditor == null) {
+            wpAceEditor = new WpAceEditor(options);
+        }
+
         var htmloptions = $('select[name^=wp_ae_options]');
         for (var i = 0; i < htmloptions.length; i++) {
             var id = htmloptions.eq(i).attr('id');
-            options[id] = changeOptions[id](htmloptions.eq(i).val(), options[id]);;
+            if (typeof(wpAceEditor.changeOptions[id]) !== 'undefined') {
+                var convtentValue = wpAceEditor.changeOptions[id](htmloptions.eq(i).val());
+                if (convtentValue !== null) {
+                    options[id] = convtentValue;
+                }
+            }
         }
+
         options['lang'] = $('#lang').val();
+        for (var key in options) {
+            wpAceEditor.options[key] = options[key];
+        }
+
+        $('#sourcePreview').text(wpAceEditor.convertHtml($('#inserttag').val(), $('#inserttype').val(), options, "Your Source"));
+
         if (editor) {
-            setEditorOptions(editor, options);
+            wpAceEditor.resetOptions(editor, wpAceEditor.options);
         } else {
-            var editors = setWpAceEditorHeight($('#testAceEditor'), options);
-            editor = editors[0];
+            editor = wpAceEditor.reConvertItem($('#testAceEditor'));
         }
     }
     (function(){
@@ -186,6 +228,7 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
             $('#lang').change(function() {
                 setEditorHighLight();
             });
+
             setEditorHighLight();
         });
     })();

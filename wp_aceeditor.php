@@ -91,6 +91,16 @@ HTML;
             echo "<input type=\"checkbox\" name=\"{$name}[]\" id=\"{$id}\" value=\"{$key}\"{$selected} id=\"\"/><label for=\"{$id}\">{$value}</label> ";
         }
     }
+    function addCodeButton() {
+        $button_value = __('Add Code');
+        $out_put = <<<HTML
+<a href="#" id="insert-code-button" class="button add-code add_media" data-editor="content" title="{$button_value}">
+    <span class="wp-media-buttons-icon"></span> {$button_value}
+</a>
+HTML;
+        echo $out_put;
+    }
+
 }
 
 $aceeditor = new WpAceeditor();
@@ -106,15 +116,12 @@ add_action('wp_footer', array ($aceeditor, 'insertFootJs'));
 add_action('admin_menu', array ($aceeditor, 'menuLink'));
 // 插件链接
 add_action('plugin_action_links', array ($aceeditor, 'actionLink'), 10, 2);
+// 提交画面添加按钮
+add_action('media_buttons', array ($aceeditor, 'addCodeButton'), 11);
 
 // 替换代码里的HTML
 // add_filter('the_content',  'wp_ae_html_encode_code');
 
-
-// function wp_ae_options_page() {
-//     $current_path = dirname(__FILE__) . '/inc/wp_aceeditor_setting.php';
-//     include $current_path;
-// }
 
 // function wp_ae_html_encode_code($content) {
 //     $result = preg_replace_callback('/(<pre[^<>]+lang=[^<>]+>)(.+?)(<\/pre>)/si', function ($matches) {
@@ -125,24 +132,14 @@ add_action('plugin_action_links', array ($aceeditor, 'actionLink'), 10, 2);
 //     return $result;
 // }
 
-// function wp_ae_add_code_button() {
-//     $button_value = __('Add Code');
-//     $out_put = <<<HTML
-// <a href="#" id="insert-code-button" class="button add-code add_media" data-editor="content" title="$button_value">
-//     <span class="wp-media-buttons-icon"></span> $button_value
-// </a>
-// HTML;
-//     echo $out_put;
-// }
-
-// function wp_ae_admin_footer() {
-//     include (dirname(__FILE__) . '/inc/wp_aceeditor_addcode.php');
-// }
+function wp_ae_admin_footer() {
+    include (dirname(__FILE__) . '/inc/wp_aceeditor_addcode.php');
+}
 
 
-// add_action('admin_footer', 'wp_ae_admin_footer' );
+add_action('admin_footer', 'wp_ae_admin_footer' );
 
 
-// add_action('media_buttons','wp_ae_add_code_button', 11);
+//
 
 //

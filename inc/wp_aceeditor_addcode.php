@@ -1,6 +1,8 @@
 <?PHP
 $plugin_folder_name = basename(dirname(dirname(__FILE__)));
 $current_path = get_option('siteurl') . '/wp-content/plugins/' . $plugin_folder_name;
+global $pagenow;
+echo $pagenow . 'ddddddddddddd';
 ?>
 <div tabindex="0" id="__wp-ae-add-code-div" class="supports-drag-drop"
     style="display: none;">
@@ -17,16 +19,16 @@ $current_path = get_option('siteurl') . '/wp-content/plugins/' . $plugin_folder_
                     <div style="position: absolute;">
                     <?PHP echo __('Language', 'wp_ae')?>
                     <select id="lang">
-                        <?PHP options('', $wp_ae_lang)?>
+                        <?PHP //options('', $wp_ae_lang)?>
                     </select>
 
                     <?PHP echo __('Code theme', 'wp_ae')?>
                     <select name="wp_ae_options[theme]" id="theme">
                             <optgroup label="Bright">
-                            <?PHP options($options['theme'], $wp_ae_themes_bright)?>
+                            <?PHP //options($options['theme'], $wp_ae_themes_bright)?>
                         </optgroup>
                             <optgroup label="Dark">
-                            <?PHP options($options['theme'], $wp_ae_themes_dark)?>
+                            <?PHP //options($options['theme'], $wp_ae_themes_dark)?>
                         </optgroup>
                         </select>
                     </div>
