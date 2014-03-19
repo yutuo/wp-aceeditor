@@ -1,5 +1,7 @@
 <style type="text/css">
 #__wp-ae-add-code-div .form-table td {padding: 0}
+#insertedLang {padding: 2px 10px}
+#insertedLang span {white-space: nowrap; padding: 3px; background-color: #ddd; cursor: pointer;}
 </style>
 <div tabindex="0" id="__wp-ae-add-code-div" class="supports-drag-drop" style="display: none;">
     <div class="media-modal wp-core-ui">
@@ -20,7 +22,20 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div id="insertedLang"></div>
+                                    <div id="insertedLang">
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                        <span data-value="java">J a v a</span>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -169,6 +184,48 @@
         wpAceEditor.resetOptions(editor, options);
     }
 
+    function setSetedLang(flag) {
+        var key = 'wp_ae_seted_lang';
+        var day = 999;
+
+        var valuestr = jQuery.cookie(key);
+        var values = [];
+        if (typeof(valuestr) !== 'undefined' && valuestr.length > 0) {
+            values = valuestr.split(',');
+        }
+        if (typeof(flag) !== 'undefined' && flag === true && values.length > 0) {
+            jQuery('#lang').val(values[0]);
+        }
+        var selectLang = jQuery('#lang').val();
+
+        var index = values.indexOf(selectLang);
+        if (index >= 0) {
+            values.splice(index, 1);
+        }
+        values.unshift(selectLang);
+        while (values.length > options['maxsavecnt']) {
+            values.pop();
+        }
+
+        var langSelect = jQuery('#lang');
+        var insertedLang = jQuery('#insertedLang');
+
+        var html = '';
+        for (var i in values) {
+            html += '<span data-value="' + values[i] + '" onclick="selectLang(this)">';
+            html += langSelect.find('option[value=' + values[i] + ']').text();
+            html += '</span> ';
+        }
+
+        insertedLang.html(html);
+        jQuery.cookie(key, values.join(','), day);
+    }
+
+    function selectLang(item) {
+        jQuery('#lang').val(jQuery(item).attr('data-value'));
+        setEditorHighLight();
+    }
+
     (function(){
         var $ = jQuery;
         $(document).ready(function(){
@@ -185,11 +242,14 @@
                 $('#__wp-ae-add-code-div').hide();
                 return false;
             });
+            jQuery('#lang').change(setSetedLang);
 
             $('select[name^=wp_ae_options]').change(function() {
                setEditorHighLight();
             });
+            setSetedLang(true);
             setEditorHighLight();
+
         });
     })();
 </script>

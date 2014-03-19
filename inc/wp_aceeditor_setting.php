@@ -2,7 +2,7 @@
 if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
     $postOptions = $_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY];
 
-    $int_items = array ('lineheight', 'fontsize', 'tabsize', 'wrap');
+    $int_items = array ('lineheight', 'fontsize', 'tabsize', 'wrap', 'maxsavecnt');
     $boolean_items = array ('tabtospace', 'indent', 'gutter', 'fold', 'active');
     $array_items = array ('convtag', 'convtype');
     foreach ($postOptions as $key => $value) {
@@ -63,6 +63,12 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
                     <th scope="row"><?php echo __('Background color', 'wp_ae') ?></th>
                     <td>
                         <input name="wp_ae_options[background]" id="background" value="<?php echo $this->options['background']; ?>"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php echo __('Max save lang count', 'wp_ae') ?></th>
+                    <td>
+                        <input type="number" min="1" max="99" name="wp_ae_options[maxsavecnt]" id="maxsavecnt" value="<?php echo $this->options['maxsavecnt']; ?>"/>
                     </td>
                 </tr>
             </table>

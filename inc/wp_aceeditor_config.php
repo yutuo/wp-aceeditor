@@ -155,6 +155,7 @@ class WpAceeditorConfig {
             'inserttag' => 'pre',                                           // 自动插入的Tag
             'inserttype' => 'data-wpae',                                    // 自动插入Tag的属性
             'background' => '#ddd',                                         // 播入代码的背景
+            'maxsavecnt' => 10,                                             // 语言最大保存
 
             'readonly' => true,             // 代码只读
             'theme' => 'eclipse',           // 显示样式
