@@ -152,8 +152,9 @@ class WpAceeditorConfig {
     static $DEFAULT_OPTION = array (
             'convtag' => array('pre', 'code'),                              // 要转换的Tag
             'convtype' => array('lang', 'data-wpae', 'data-wpae-lang'),     // 要转换Tag的必要属性
-            'inserttag' => array('pre'),                                    // 自动插入的Tag
-            'inserttype' => array('data-wpae'),                             // 自动插入Tag的属性
+            'inserttag' => 'pre',                                           // 自动插入的Tag
+            'inserttype' => 'data-wpae',                                    // 自动插入Tag的属性
+            'background' => '#ddd',                                         // 播入代码的背景
 
             'readonly' => true,             // 代码只读
             'theme' => 'eclipse',           // 显示样式
@@ -174,7 +175,6 @@ class WpAceeditorConfig {
     );
     /** 字体数组 */
     static $FONT_SIZE = array (
-            'none' => '',
             '8' => '8',
             '9' => '9',
             '10' => '10',
@@ -197,8 +197,9 @@ class WpAceeditorConfig {
             '8' => '8'
     );
 
+
     static $PRINT = array (
-            '-1' => '',
+            '-1' => 'No display',
             '80' => '80',
             '100' => '100',
             '120' => '120',

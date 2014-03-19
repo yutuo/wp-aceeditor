@@ -15,6 +15,10 @@ var WpAceEditor = function(options) {
             result[key] = options[key];
         }
 
+        if (item == null) {
+            return result;
+        }
+
         var htmlOptions = this.getHtmlOptions(item);
         for (var key in htmlOptions) {
             if (typeof(this.changeOptions[key]) !== 'undefined') {
@@ -213,8 +217,11 @@ var WpAceEditor = function(options) {
         return resize;
     };
 
-    this.convertHtml = function(inserttag, inserttype, options, value) {
+    this.convertHtml = function(inserttag, inserttype, background, options, value) {
         var result = '<' + inserttag;
+        if (background != '') {
+            result += ' style="background-color: ' + background + ';"';
+        }
         if (inserttype === 'lang') {
             for (var key in options) {
                 result += ' ' + key + '="' + options[key] + '"';

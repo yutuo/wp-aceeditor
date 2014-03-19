@@ -56,10 +56,12 @@ class WpAceeditor {
 HTML;
         echo $html;
     }
+    /** 在设置菜单添加链接 */
     function menuLink() {
         add_options_page('Wp AceEditor Settings', __('Wp-AceEditor', 'wp_ae'), 'manage_options', 'wpAceEditor',
                         array ($this, 'optionPage'));
     }
+    /** 插件设置链接 */
     function actionLink($links, $file) {
         if ($file != plugin_basename(__FILE__)) {
             return $links;
@@ -68,22 +70,47 @@ HTML;
         array_unshift($links, $settings_link);
         return $links;
     }
+    /** 插件设置页面 */
     function optionPage() {
         $current_path = dirname(__FILE__) . '/inc/wp_aceeditor_setting.php';
         include $current_path;
     }
-    function optionsHtml($selectValue, $list) {
+    /** 在添加媒体后添加一个按钮 */
+    function addCodeButton() {
+        $button_value = __('Add Code');
+        $out_put = <<<HTML
+<a href="#" id="insert-code-button" class="button add-code add_media" data-editor="content" title="{$button_value}">
+    <span class="wp-media-buttons-icon" style="margin-top: -2px; background: url({$this->currentUrl}/images/icon.png) no-repeat top left;"></span>
+    {$button_value}
+</a>
+HTML;
+        echo $out_put;
+    }
+    /** 添加按钮的处理方法 */
+    function addAdminFooter() {
+        global $pagenow;
+        if ($pagenow == 'post.php' || $pagenow == 'post-new.php') {
+            include (dirname(__FILE__) . '/inc/wp_aceeditor_addcode.php');
+        }
+    }
+    /** Select的Option生成 */
+    function optionsHtml($selectValue, $list, $default=false) {
+        $default_txt = __('Default', 'wp_ae');
+        if ($default) {
+            echo "<option value=\"\" selected>{$default_txt}</option>";
+        }
         foreach ($list as $key => $value) {
             $selected = '';
             if (is_bool($selectValue)) {
                 $selectValue = $selectValue ? 'true' : 'false';
             }
-            if ($key == $selectValue) {
+            if (!$default && $key == $selectValue) {
                 $selected = ' selected';
             }
             echo "<option value=\"{$key}\"{$selected}>{$value}</option>";
         }
     }
+    /** Checkbox的生成 */
     function checkboxsHtml($name, $selectValues, $list) {
         foreach ($list as $key => $value) {
             $selected = in_array($key, $selectValues) ? ' checked' : '';
@@ -91,16 +118,6 @@ HTML;
             echo "<input type=\"checkbox\" name=\"{$name}[]\" id=\"{$id}\" value=\"{$key}\"{$selected} id=\"\"/><label for=\"{$id}\">{$value}</label> ";
         }
     }
-    function addCodeButton() {
-        $button_value = __('Add Code');
-        $out_put = <<<HTML
-<a href="#" id="insert-code-button" class="button add-code add_media" data-editor="content" title="{$button_value}">
-    <span class="wp-media-buttons-icon"></span> {$button_value}
-</a>
-HTML;
-        echo $out_put;
-    }
-
 }
 
 $aceeditor = new WpAceeditor();
@@ -118,6 +135,8 @@ add_action('admin_menu', array ($aceeditor, 'menuLink'));
 add_action('plugin_action_links', array ($aceeditor, 'actionLink'), 10, 2);
 // 提交画面添加按钮
 add_action('media_buttons', array ($aceeditor, 'addCodeButton'), 11);
+// 提交画面添加按钮
+add_action('admin_footer', array ($aceeditor, 'addAdminFooter') );
 
 // 替换代码里的HTML
 // add_filter('the_content',  'wp_ae_html_encode_code');
@@ -133,11 +152,11 @@ add_action('media_buttons', array ($aceeditor, 'addCodeButton'), 11);
 // }
 
 function wp_ae_admin_footer() {
-    include (dirname(__FILE__) . '/inc/wp_aceeditor_addcode.php');
+
 }
 
 
-add_action('admin_footer', 'wp_ae_admin_footer' );
+
 
 
 //
