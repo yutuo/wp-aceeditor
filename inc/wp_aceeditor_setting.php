@@ -169,8 +169,6 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
             </p>
         </form>
         <h3><?php echo __('Preview', 'wp_ae') ?></h3>
-        <p><?php echo __('You insert source as this.', 'wp_ae') ?></p>
-        <pre id="sourcePreview" style="width: 98%"></pre>
         <p><?php echo __('You can input source to preview the result.', 'wp_ae') ?></p>
         <table class="form-table">
             <tr>
@@ -219,8 +217,6 @@ func();
         for (var key in options) {
             wpAceEditor.options[key] = options[key];
         }
-
-        $('#sourcePreview').text(wpAceEditor.convertHtml($('#inserttag').val(), $('#inserttype').val(), '', options, "Your Source"));
 
         if (editor) {
             wpAceEditor.resetOptions(editor, wpAceEditor.options);

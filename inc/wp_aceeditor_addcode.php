@@ -11,7 +11,7 @@
             <div class="media-frame wp-core-ui">
                 <div class="media-frame-menu" style="width: 299px;">
                     <div class="media-menu">
-                        <a href="#" class="media-menu-item active"><?php echo __('Setting', 'wp_ae')?></a>
+                        <a href="#" class="media-menu-item active"><?php echo __('Settings', 'wp_ae')?></a>
                         <div class="separator"></div>
                         <table class="form-table" style="width: 280px;">
                             <tr>
