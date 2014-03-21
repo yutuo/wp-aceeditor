@@ -1,13 +1,13 @@
 <?php
 /**
 Plugin Name: WP AceEditor
-Plugin URI: http://yutuo.net
+Plugin URI: http://yutuo.net/archives/f685d2dbbb176e86.html
 Description: This plugin is code syntax highlighter based on <a href="http://ace.ajax.org/">Ace Editor</a> V1.0.3. Supported languages: Bash, C++, CSS, Delphi, Java, JavaScript, Perl, PHP, Python, Ruby, SQL, VB, XML, XHTML and HTML etc.
-Version: 1.0.0
+Version: 1.0.1
 Author: yutuo
 Author URI: http://yutuo.net
-Text Domain: wp_ytace
-Domain Path: /languages
+Text Domain: wp_aceeditor
+Domain Path: /wp_aceeditor
 License: GPL v3 - http://www.gnu.org/licenses/gpl.html
 */
 require_once (dirname(__FILE__) . '/inc/wp_aceeditor_config.php');
@@ -37,7 +37,7 @@ class WpAceeditor {
     }
     /** 初始化 */
     function init() {
-        load_plugin_textdomain('wp_ae', false, $plugin_dir . '/lang');
+        load_plugin_textdomain('wp_ae', false, $this->pluginDir . '/lang');
         wp_enqueue_script("jquery");
     }
     /** 在Wordpress行尾添加JavaScript */
@@ -77,7 +77,7 @@ HTML;
     }
     /** 在添加媒体后添加一个按钮 */
     function addCodeButton() {
-        $button_value = __('Add Code');
+        $button_value = __('Add Code', 'wp_ae');
         $out_put = <<<HTML
 <a href="#" id="insert-code-button" class="button add-code add_media" data-editor="content" title="{$button_value}">
     <span class="wp-media-buttons-icon" style="margin-top: -2px; background: url({$this->currentUrl}/images/icon.png) no-repeat top left;"></span>
@@ -137,28 +137,3 @@ add_action('plugin_action_links', array ($aceeditor, 'actionLink'), 10, 2);
 add_action('media_buttons', array ($aceeditor, 'addCodeButton'), 11);
 // 提交画面添加按钮
 add_action('admin_footer', array ($aceeditor, 'addAdminFooter') );
-
-// 替换代码里的HTML
-// add_filter('the_content',  'wp_ae_html_encode_code');
-
-
-// function wp_ae_html_encode_code($content) {
-//     $result = preg_replace_callback('/(<pre[^<>]+lang=[^<>]+>)(.+?)(<\/pre>)/si', function ($matches) {
-//         $value = str_replace('&#038;', '&', $matches[2]);
-//         $value = str_replace('&#062;', '>', $matches[2]);
-//         return $matches[1] . htmlspecialchars($value) . $matches[3];
-//     }, $content);
-//     return $result;
-// }
-
-function wp_ae_admin_footer() {
-
-}
-
-
-
-
-
-//
-
-//

@@ -13,7 +13,7 @@
                     <div class="media-menu">
                         <a href="#" class="media-menu-item active"><?php echo __('Settings', 'wp_ae')?></a>
                         <div class="separator"></div>
-                        <table class="form-table" style="width: 280px;">
+                        <table class="form-table" style="width: 280px; margin-left: 10px;">
                             <tr>
                                 <th scope="row"><?php echo __('Language', 'wp_ae') ?></th>
                                 <td><select name="wp_ae_options[lang]" id="lang">
@@ -23,18 +23,6 @@
                             <tr>
                                 <td colspan="2">
                                     <div id="insertedLang">
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
-                                        <span data-value="java">J a v a</span>
                                     </div>
                                 </td>
                             </tr>
@@ -49,6 +37,12 @@
                                             <?php $this->optionsHtml('', WpAceeditorConfig::$THEMES_DARK)?>
                                         </optgroup>
                                 </select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php echo __('Read only', 'wp_ae') ?></th>
+                                <td><select name="wp_ae_options[readonly]" id="readonly">
+                                        <?php $this->optionsHtml($this->options['readonly'], WpAceeditorConfig::$BOOLEAN, true)?>
+                                    </select></td>
                             </tr>
                             <tr>
                                 <th scope="row"><?php echo __('Line height', 'wp_ae') ?></th>
@@ -124,17 +118,16 @@
                 <div class="media-frame-title" style="left: 300px;">
                     <h1><?php echo __('Insert Code', 'wp_ae')?></h1>
                 </div>
-                <div class="media-frame-router" style="left: 300px; height: 0px"></div>
-                <div class="media-frame-content" style="left: 300px; top: 30px;">
+                <div class="media-frame-content" style="left: 300px; top: 50px;">
                     <div id="insertCodePre"
-                        style="top: 30px; position: absolute; bottom: 10px; right: 5px; left: 10px;"></div>
+                        style="top: 10px; position: absolute; bottom: 10px; right: 5px; left: 10px;"></div>
                 </div>
                 <div class="media-frame-toolbar" style="left: 300px;">
                     <div class="media-toolbar">
                         <div class="media-toolbar-primary">
                             <a href="#" id="__wp-ae-insert-code"
                                 class="button media-button button-primary button-large media-button-insert"
-                                disabled="disabled"><?php echo __('Insert into post', 'wp_ae')?></a>
+                                ><?php echo __('Insert into post', 'wp_ae')?></a>
                         </div>
                     </div>
                 </div>
@@ -173,7 +166,6 @@
 
     function setEditorHighLight() {
         var options = wpAceEditor.getOptions(null);
-        options['readonly'] = false;
         var htmloptions = getHtmlOptions();
         for (var key in htmloptions) {
             options[key] = htmloptions[key];
@@ -181,6 +173,7 @@
         if (!editor) {
             editor = ace.edit('insertCodePre');
         }
+        options['readonly'] = false;
         wpAceEditor.resetOptions(editor, options);
     }
 

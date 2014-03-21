@@ -158,7 +158,7 @@ class WpAceeditorConfig {
             'maxsavecnt' => 10,                                             // 语言最大保存
 
             'readonly' => true,             // 代码只读
-            'theme' => 'eclipse',           // 显示样式
+            'theme' => 'monokai',           // 显示样式
             'lang' => 'text',               // 显示语言
             'tabsize' => 4,                 // Tab宽度
             'lineheight' => 120,            // 行高 %
@@ -172,7 +172,6 @@ class WpAceeditorConfig {
             'gutter' => true,               // 显示行号
             'active' => true,               // 活动行高亮显示
             'foldstyle' => 'markbegin',     // 代码收缩样式
-            //'htmlencode' => true,           // HTML转换
     );
     /** 字体数组 */
     static $FONT_SIZE = array (

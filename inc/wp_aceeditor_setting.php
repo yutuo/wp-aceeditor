@@ -3,7 +3,7 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
     $postOptions = $_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY];
 
     $int_items = array ('lineheight', 'fontsize', 'tabsize', 'wrap', 'maxsavecnt');
-    $boolean_items = array ('tabtospace', 'indent', 'gutter', 'fold', 'active');
+    $boolean_items = array ('readonly', 'tabtospace', 'indent', 'gutter', 'fold', 'active');
     $array_items = array ('convtag', 'convtype');
     foreach ($postOptions as $key => $value) {
         if (in_array($key, $int_items)) {
@@ -93,6 +93,12 @@ if ($_POST[WpAceeditorConfig::CONFIG_OPTIONS_KEY]) {
                                 <?php $this->optionsHtml($this->options['theme'], WpAceeditorConfig::$THEMES_DARK)?>
                             </optgroup>
                     </select></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php echo __('Read only', 'wp_ae') ?>(readonly)</th>
+                    <td><select name="wp_ae_options[readonly]" id="readonly">
+                            <?php $this->optionsHtml($this->options['readonly'], WpAceeditorConfig::$BOOLEAN)?>
+                        </select></td>
                 </tr>
                 <tr>
                     <th scope="row"><?php echo __('Line height', 'wp_ae') ?>(lineheight)</th>

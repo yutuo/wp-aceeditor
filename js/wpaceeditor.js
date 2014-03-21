@@ -159,7 +159,7 @@ var WpAceEditor = function(options) {
             for (var i in attrstrs) {
                 var attrs = attrstrs[i].split(':');
                 if (attrs.length >= 2) {
-                    result[$.trim(attrs[0])] = $.trim(attrs[1]);
+                    result[jQuery.trim(attrs[0])] = jQuery.trim(attrs[1]);
                 }
             }
         } else if (typeof(allAttr['data-wpae-lang']) !== 'undefined') {
@@ -290,9 +290,9 @@ var WpAceEditor = function(options) {
     this.resizeEditor = function  (divItem, editor, options) {
         var changeHeight = function(height) {
             if (typeof(jQuery.browser.mozilla) !== 'undefined') {
-                return height + 1;
+                return height + 2;
             } else {
-                return height;
+                return height + 1;
             }
         };
 

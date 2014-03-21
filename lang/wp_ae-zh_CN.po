@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP AceEditor\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-21 11:38+0900\n"
-"PO-Revision-Date: 2014-03-21 11:38+0900\n"
+"POT-Creation-Date: 2014-03-21 23:27+0900\n"
+"PO-Revision-Date: 2014-03-21 23:27+0900\n"
 "Last-Translator: yutuo <yutuo5@gmail.com>\n"
 "Language-Team: yutuo <yutuo5@gmail.com>\n"
 "Language: zh_CN\n"
@@ -20,71 +20,75 @@ msgstr ""
 msgid "Settings"
 msgstr "设置"
 
-#: inc/wp_aceeditor_addcode.php:18 inc/wp_aceeditor_setting.php:175
+#: inc/wp_aceeditor_addcode.php:18 inc/wp_aceeditor_setting.php:181
 msgid "Language"
 msgstr "语言"
 
-#: inc/wp_aceeditor_addcode.php:42 inc/wp_aceeditor_setting.php:87
+#: inc/wp_aceeditor_addcode.php:30 inc/wp_aceeditor_setting.php:87
 msgid "Code theme"
 msgstr "代码风格"
 
-#: inc/wp_aceeditor_addcode.php:44 wp_aceeditor.php:98
+#: inc/wp_aceeditor_addcode.php:32 wp_aceeditor.php:98
 msgid "Default"
 msgstr "默认"
 
-#: inc/wp_aceeditor_addcode.php:54 inc/wp_aceeditor_setting.php:98
+#: inc/wp_aceeditor_addcode.php:42 inc/wp_aceeditor_setting.php:98
+msgid "Read only"
+msgstr "代码只读"
+
+#: inc/wp_aceeditor_addcode.php:48 inc/wp_aceeditor_setting.php:104
 msgid "Line height"
 msgstr "行高"
 
-#: inc/wp_aceeditor_addcode.php:60 inc/wp_aceeditor_setting.php:104
+#: inc/wp_aceeditor_addcode.php:54 inc/wp_aceeditor_setting.php:110
 msgid "Font size"
 msgstr "字体大小"
 
-#: inc/wp_aceeditor_addcode.php:66 inc/wp_aceeditor_setting.php:110
+#: inc/wp_aceeditor_addcode.php:60 inc/wp_aceeditor_setting.php:116
 msgid "Tab size"
 msgstr "Tab宽度"
 
-#: inc/wp_aceeditor_addcode.php:72 inc/wp_aceeditor_setting.php:116
+#: inc/wp_aceeditor_addcode.php:66 inc/wp_aceeditor_setting.php:122
 msgid "Tab to space"
 msgstr "制表符转换为空格"
 
-#: inc/wp_aceeditor_addcode.php:78 inc/wp_aceeditor_setting.php:122
+#: inc/wp_aceeditor_addcode.php:72 inc/wp_aceeditor_setting.php:128
 msgid "Auto wrap"
 msgstr "自动换行"
 
-#: inc/wp_aceeditor_addcode.php:85 inc/wp_aceeditor_setting.php:129
+#: inc/wp_aceeditor_addcode.php:79 inc/wp_aceeditor_setting.php:135
 msgid "Print margin Column"
 msgstr "打印线"
 
-#: inc/wp_aceeditor_addcode.php:88 inc/wp_aceeditor_setting.php:132
+#: inc/wp_aceeditor_addcode.php:82 inc/wp_aceeditor_setting.php:138
 msgid "Chars"
 msgstr "字符"
 
-#: inc/wp_aceeditor_addcode.php:92 inc/wp_aceeditor_setting.php:136
+#: inc/wp_aceeditor_addcode.php:86 inc/wp_aceeditor_setting.php:142
 msgid "Show Indent Guides"
 msgstr "显示缩进提示条"
 
-#: inc/wp_aceeditor_addcode.php:98 inc/wp_aceeditor_setting.php:142
+#: inc/wp_aceeditor_addcode.php:92 inc/wp_aceeditor_setting.php:148
 msgid "Show Gutter"
 msgstr "显示侧边栏"
 
-#: inc/wp_aceeditor_addcode.php:104 inc/wp_aceeditor_setting.php:148
+#: inc/wp_aceeditor_addcode.php:98 inc/wp_aceeditor_setting.php:154
 msgid "Folding Style"
 msgstr "收缩样式"
 
-#: inc/wp_aceeditor_addcode.php:110 inc/wp_aceeditor_setting.php:154
+#: inc/wp_aceeditor_addcode.php:104 inc/wp_aceeditor_setting.php:160
 msgid "Code fold on load"
 msgstr "加载后收缩代码"
 
-#: inc/wp_aceeditor_addcode.php:116 inc/wp_aceeditor_setting.php:160
+#: inc/wp_aceeditor_addcode.php:110 inc/wp_aceeditor_setting.php:166
 msgid "Highlight Active Line"
 msgstr "高亮当前行"
 
-#: inc/wp_aceeditor_addcode.php:125
+#: inc/wp_aceeditor_addcode.php:119
 msgid "Insert Code"
 msgstr "插入代码"
 
-#: inc/wp_aceeditor_addcode.php:137
+#: inc/wp_aceeditor_addcode.php:131
 msgid "Insert into post"
 msgstr "插入文章"
 
@@ -142,15 +146,15 @@ msgstr "请输入您的默认设置。"
 msgid "Your codes"
 msgstr "您的代码"
 
-#: inc/wp_aceeditor_setting.php:168
+#: inc/wp_aceeditor_setting.php:174
 msgid "Save Changes"
 msgstr "保存更改"
 
-#: inc/wp_aceeditor_setting.php:171
+#: inc/wp_aceeditor_setting.php:177
 msgid "Preview"
 msgstr "预览"
 
-#: inc/wp_aceeditor_setting.php:172
+#: inc/wp_aceeditor_setting.php:178
 msgid "You can input source to preview the result."
 msgstr "您可以输入代码，预览结果。"
 
