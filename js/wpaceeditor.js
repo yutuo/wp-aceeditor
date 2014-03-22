@@ -290,9 +290,9 @@ var WpAceEditor = function(options) {
     this.resizeEditor = function  (divItem, editor, options) {
         var changeHeight = function(height) {
             if (typeof(jQuery.browser.mozilla) !== 'undefined') {
-                return height + 2;
+                return height + 7;
             } else {
-                return height + 1;
+                return height + 6;
             }
         };
 

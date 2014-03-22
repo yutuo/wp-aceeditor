@@ -40,7 +40,17 @@ class WpAceeditor {
         load_plugin_textdomain('wp_ae', false, $this->pluginDir . '/lang');
         wp_enqueue_script("jquery");
     }
-    /** 在Wordpress行尾添加JavaScript */
+    /** 在Wordpress头部添加CSS */
+    function insertHeadCss() {
+        $html = <<<HTML
+<style type="text/css">
+.ace_editor .ace_gutter,
+.ace_editor .ace_scroller {padding-top: 3px;}
+</style>
+HTML;
+        echo $html;
+    }
+    /** 在Wordpress尾部添加JavaScript */
     function insertFootJs() {
         $html = <<<HTML
 <script type="text/javascript" src="{$this->currentUrl}/js/ace/ace.js"></script>
@@ -79,8 +89,8 @@ HTML;
     function addCodeButton() {
         $button_value = __('Add Code', 'wp_ae');
         $out_put = <<<HTML
-<a href="#" id="insert-code-button" class="button add-code add_media" data-editor="content" title="{$button_value}">
-    <span class="wp-media-buttons-icon" style="margin-top: -2px; background: url({$this->currentUrl}/images/icon.png) no-repeat top left;"></span>
+<a href="#" id="insert-code-button" class="button add-code" data-editor="content" title="{$button_value}">
+    <span class="wp-media-buttons-icon" style="background: url({$this->currentUrl}/images/icon.png) no-repeat top left;"></span>
     {$button_value}
 </a>
 HTML;
@@ -127,7 +137,9 @@ register_activation_hook(__FILE__, array ($aceeditor, 'activate'));
 register_deactivation_hook(__FILE__, array ($aceeditor, 'deActivate'));
 // 初始化
 add_action('init', array ($aceeditor, 'init'));
-// 在Wordpress行尾添加JavaScript
+// 在Wordpress头部添加CSS
+add_action('wp_head', array ($aceeditor, 'insertHeadCss'));
+// 在Wordpress尾部添加JavaScript
 add_action('wp_footer', array ($aceeditor, 'insertFootJs'));
 // 管理页面
 add_action('admin_menu', array ($aceeditor, 'menuLink'));
