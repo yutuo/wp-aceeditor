@@ -211,7 +211,7 @@
         }
 
         insertedLang.html(html);
-        jQuery.cookie(key, values.join(','), day);
+        jQuery.cookie(key, values.join(','), { expires: day });
     }
 
     function selectLang(item) {
