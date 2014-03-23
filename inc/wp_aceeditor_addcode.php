@@ -224,6 +224,8 @@
         $(document).ready(function(){
             $('#insert-code-button').click(function() {
                 $('#__wp-ae-add-code-div').show();
+                editor.session.setValue('');
+                editor.focus();
             });
             $('#__wp-ae-add-code-close').click(function() {
                 $('#__wp-ae-add-code-div').hide();
