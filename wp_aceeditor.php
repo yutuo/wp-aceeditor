@@ -46,6 +46,7 @@ class WpAceeditor {
 <style type="text/css">
 .ace_editor .ace_gutter,
 .ace_editor .ace_scroller {padding-top: 3px;}
+.ace_editor {margin-bottom: 20px;}
 </style>
 HTML;
         echo $html;

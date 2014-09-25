@@ -1,7 +1,7 @@
 <style type="text/css">
 #__wp-ae-add-code-div .form-table td {padding: 0}
-#insertedLang {padding: 2px 10px}
-#insertedLang span {white-space: nowrap; padding: 3px; background-color: #ddd; cursor: pointer;}
+#insertedLang {padding: 2px 2px; line-height: 1.75;}
+#insertedLang span {white-space: nowrap; padding: 1px 3px; background-color: #ddd; cursor: pointer;}
 </style>
 <div tabindex="0" id="__wp-ae-add-code-div" class="supports-drag-drop" style="display: none;">
     <div class="media-modal wp-core-ui">

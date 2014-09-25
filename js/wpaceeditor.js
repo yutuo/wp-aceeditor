@@ -108,7 +108,7 @@
     };
 
 }));
-
+ace.config.set("basePath", "/wp-content/plugins/wp-aceeditor/js/ace");
 var WpAceEditor = function(options) {
     this.ITEM_KEY = 'data-wpae-id';
     this.DIV_KEY = 'WpAceEditor_';
@@ -289,20 +289,15 @@ var WpAceEditor = function(options) {
     /** 重新设置高度 */
     this.resizeEditor = function  (divItem, editor, options) {
         var changeHeight = function(height) {
-            if (typeof(jQuery.browser.mozilla) !== 'undefined') {
-                return height + 7;
-            } else {
-                return height + 6;
-            }
+            return height + 6;
         };
-
-        var lineHeight = Math.round(options['fontsize'] * options['lineheight'] / 100);
-        var oldHeight = editor.getSession().getScreenLength() * lineHeight;
+        var lineHeight = editor.renderer.layerConfig.lineHeight;
+        var oldHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
         oldHeight = changeHeight(oldHeight);
 
         var resize = function() {
-            var lineHeight = Math.round(options['fontsize'] * options['lineheight'] / 100);
-            var newHeight = editor.getSession().getScreenLength() * lineHeight;
+            var lineHeight = editor.renderer.layerConfig.lineHeight;
+            var newHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
             if (editor.renderer.$horizScroll) {
                 newHeight += editor.renderer.scrollBarH.height;
             }
