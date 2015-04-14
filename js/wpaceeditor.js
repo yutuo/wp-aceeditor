@@ -198,16 +198,16 @@ var WpAceEditor = function(options) {
     };
     /** 取得所有要转换的项目 */
     this.matchAllItems = function() {
-        var matchString = '';
-        for (var tagi in this.options['convtag']) {
-            for (var typei in this.options['convtype']) {
-                if (matchString.length > 0) {
-                    matchString += ',';
-                }
-                matchString += this.options['convtag'][tagi];
-                matchString += '[' + this.options['convtype'][typei] + ']';
-            }
-        }
+        var matchString = 'pre[data-wpae], code[data-wpae]';
+//        for (var tagi in this.options['convtag']) {
+//            for (var typei in this.options['convtype']) {
+//                if (matchString.length > 0) {
+//                    matchString += ',';
+//                }
+//                matchString += this.options['convtag'][tagi];
+//                matchString += '[' + this.options['convtype'][typei] + ']';
+//            }
+//        }
         return this.$(matchString);
     };
     /** 重新转换 */
@@ -224,13 +224,16 @@ var WpAceEditor = function(options) {
             var divItem = this.$('<div></div>');
             divItem.attr('id', this.DIV_KEY + convid);
             // 宽度
-            divItem.css('width', options['width']);
+           divItem.css('width', options['width']);
             // 行高
             divItem.css('line-height', options['lineheight'] + '%');
             divItem.css('position', 'relative');
             divItem.css('text-shadow', 'none');
+
+            // divItem.css('display', 'none');
             item.after(divItem);
             editor = ace.edit(divItem.get(0));
+            editor.$blockScrolling = Infinity;
 
             this.convertedEditor[convid] = editor;
 
@@ -239,18 +242,24 @@ var WpAceEditor = function(options) {
             if (options['tabtospace']) {
                 value = value.replace(/\t/, '    ');
             }
-            editor.getSession().setValue(value);
-
-            item.hide();
-            divItem.show();
+            editor.getSession().setValue(value);            
+            //if (item.get(0).nodeName.toLowerCase() === 'pre') {
+                item.hide();
+                divItem.show();
+            //}
         } else {
             editor = this.convertedEditor[convid];
             divItem = this.$('#' + this.DIV_KEY + convid);
         }
         // 设置属性
         this.resetOptions(editor, options);
-        // 設置高度
-        this.delayFunctions[convid] = this.resizeEditor(divItem, editor, options);
+       if (item.get(0).nodeName.toLowerCase() === 'pre') {
+           // 設置高度
+           // this.delayFunctions[convid] = 
+           this.resizeEditor(divItem, editor, options);
+       } else {
+           // this.delayFunctions[convid] = this.setOneLineEdit(item, divItem, editor);
+       }
 
         return editor;
     };
@@ -288,9 +297,11 @@ var WpAceEditor = function(options) {
 
     /** 重新设置高度 */
     this.resizeEditor = function  (divItem, editor, options) {
+        editor.renderer.updateFull(true);
         var changeHeight = function(height) {
-            return height + 6;
+            return height + 7;
         };
+
         var lineHeight = editor.renderer.layerConfig.lineHeight;
         var oldHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
         oldHeight = changeHeight(oldHeight);
@@ -298,6 +309,7 @@ var WpAceEditor = function(options) {
         var resize = function() {
             var lineHeight = editor.renderer.layerConfig.lineHeight;
             var newHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
+
             if (editor.renderer.$horizScroll) {
                 newHeight += editor.renderer.scrollBarH.height;
             }
@@ -310,15 +322,35 @@ var WpAceEditor = function(options) {
             }
         };
 
-        var resizedelay = function() {
-            window.setTimeout(resize, 20);
-        };
-
         divItem.height(oldHeight);
         editor.resize();
 
-        editor.getSession().on('change', resizedelay);
-        editor.getSession().on('changeFold', resizedelay);
+        editor.renderer.on('scrollbarVisibilityChanged', resize);
+        editor.getSession().on('changeFold', resize);
+    };
+
+    /** 重新行内代码 */
+    this.setOneLineEdit = function (item, divItem, editor) {
+        var resize = function() {
+            var spanItem = jQuery('<span></span>');
+            item.after(spanItem);
+            spanItem.addClass(divItem.attr('class'));
+
+
+//
+//            var lineHeight = editor.renderer.layerConfig.lineHeight;
+//            var newHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
+//            if (editor.renderer.$horizScroll) {
+//                newHeight += editor.renderer.scrollBarH.height;
+//            }
+//            newHeight = changeHeight(newHeight);
+//
+//            if (oldHeight !== newHeight) {
+//                oldHeight = newHeight;
+//                divItem.height(newHeight);
+//                editor.resize();
+//            }
+        };
 
         return resize;
     };
