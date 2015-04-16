@@ -215,7 +215,6 @@ var WpAceEditor = function(options) {
             item.attr(this.ITEM_KEY, convid);
 
             var divItem = this.$('<div></div>');
-            // divItem.hide();
             divItem.attr('id', this.DIV_KEY + convid);
 
             // 行高
@@ -234,7 +233,6 @@ var WpAceEditor = function(options) {
             }
             item.after(divItem);
             editor = ace.edit(divItem.get(0));
-            editor.$blockScrolling = Infinity;
 
             this.convertedEditor[convid] = editor;
 
@@ -244,6 +242,26 @@ var WpAceEditor = function(options) {
                 value = value.replace(/\t/, '    ');
             }
             editor.getSession().setValue(value);
+			
+			editor.renderer.moveTextAreaToCursor = function(textarea) {
+				 var pos = this.$cursorLayer.getPixelPosition();
+
+				 if (!pos) return;
+
+				 var bounds = this.content.getBoundingClientRect();
+				 var offset = this.layerConfig.offset;
+
+				 textarea.style.left = (bounds.left + pos.left) + "px";
+				 textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
+			};
+
+			editor.onFocus = function() {
+				this.renderer.showCursor();
+				this.renderer.visualizeFocus();
+				this._emit("focus");
+				this.renderer.moveTextAreaToCursor(this.textInput.getElement());
+			};
+
             item.hide();
             divItem.show();
         } else {
@@ -268,7 +286,11 @@ var WpAceEditor = function(options) {
         // 显示样式
         editor.setTheme('ace/theme/' + options['theme']);
         // 显示语言
-        editor.getSession().setMode('ace/mode/' + options['lang']);
+		if (options['lang'] === 'php-inline') {
+			editor.getSession().setMode({path: 'ace/mode/php', inline: true});
+		} else {
+			editor.getSession().setMode('ace/mode/' + options['lang']);
+		}
         // Tab宽度
         editor.getSession().setTabSize(options['tabsise']);
         // 文字大小
