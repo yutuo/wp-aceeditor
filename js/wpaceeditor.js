@@ -1,12 +1,12 @@
-(function (factory) {
+(function(factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as anonymous module.
-        define(['jquery'], factory);
+        define([ 'jquery' ], factory);
     } else {
         // Browser globals.
         factory(jQuery);
     }
-}(function ($) {
+}(function($) {
 
     var pluses = /\+/g;
 
@@ -32,14 +32,15 @@
             // Replace server-side written pluses with spaces.
             // If we can't decode the cookie, ignore it, it's unusable.
             s = decodeURIComponent(s.replace(pluses, ' '));
-        } catch(e) {
+        } catch (e) {
             return;
         }
 
         try {
             // If we can't parse the cookie, ignore it, it's unusable.
             return config.json ? JSON.parse(s) : s;
-        } catch(e) {}
+        } catch (e) {
+        }
     }
 
     function read(s, converter) {
@@ -47,7 +48,7 @@
         return $.isFunction(converter) ? converter(value) : value;
     }
 
-    var config = $.cookie = function (key, value, options) {
+    var config = $.cookie = function(key, value, options) {
 
         // Write
         if (value !== undefined && !$.isFunction(value)) {
@@ -59,12 +60,20 @@
             }
 
             return (document.cookie = [
-                encode(key), '=', stringifyCookieValue(value),
-                options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                options.path    ? '; path=' + options.path : '',
-                options.domain  ? '; domain=' + options.domain : '',
-                options.secure  ? '; secure' : ''
-            ].join(''));
+                    encode(key),
+                    '=',
+                    stringifyCookieValue(value),
+                    options.expires ? '; expires='
+                            + options.expires.toUTCString() : '', // use
+                    // expires
+                    // attribute,
+                    // max-age
+                    // is not
+                    // supported
+                    // by IE
+                    options.path ? '; path=' + options.path : '',
+                    options.domain ? '; domain=' + options.domain : '',
+                    options.secure ? '; secure' : '' ].join(''));
         }
 
         // Read
@@ -98,10 +107,12 @@
 
     config.defaults = {};
 
-    $.removeCookie = function (key, options) {
+    $.removeCookie = function(key, options) {
         if ($.cookie(key) !== undefined) {
             // Must not alter options, thus extending a fresh object...
-            $.cookie(key, '', $.extend({}, options, { expires: -1 }));
+            $.cookie(key, '', $.extend({}, options, {
+                expires : -1
+            }));
             return true;
         }
         return false;
@@ -110,7 +121,7 @@
 }));
 ace.config.set("basePath", "/wp-content/plugins/wp-aceeditor/js/ace");
 var WpAceEditor = function(options) {
-    this.ITEM_KEY = 'data-wpae-id';
+    this.ITEM_KEY = 'data-hl-id';
     this.DIV_KEY = 'WpAceEditor_';
 
     this.$ = jQuery;
@@ -122,7 +133,7 @@ var WpAceEditor = function(options) {
     /** 取得属性 */
     this.getOptions = function(item) {
         var result = [];
-        for (var key in options) {
+        for ( var key in options) {
             result[key] = options[key];
         }
 
@@ -131,8 +142,8 @@ var WpAceEditor = function(options) {
         }
 
         var htmlOptions = this.getHtmlOptions(item);
-        for (var key in htmlOptions) {
-            if (typeof(this.changeOptions[key]) !== 'undefined') {
+        for ( var key in htmlOptions) {
+            if (typeof (this.changeOptions[key]) !== 'undefined') {
                 var convtentValue = this.changeOptions[key](htmlOptions[key]);
                 if (convtentValue !== null) {
                     result[key] = convtentValue;
@@ -143,9 +154,9 @@ var WpAceEditor = function(options) {
     };
     /** 取得HTML设置的属性 */
     this.getHtmlOptions = function(item) {
-        var getAllAttr = function (htmlItem) {
+        var getAllAttr = function(htmlItem) {
             var result = [];
-            for (var index in htmlItem.attributes) {
+            for ( var index in htmlItem.attributes) {
                 var attr = htmlItem.attributes[index];
                 result[attr.name] = attr.value;
             }
@@ -154,17 +165,17 @@ var WpAceEditor = function(options) {
 
         var result = [];
         var allAttr = getAllAttr(item[0]);
-        if (typeof(allAttr['data-wpae']) !== 'undefined') {
-            var attrstrs = allAttr['data-wpae'].split(';');
-            for (var i in attrstrs) {
+        if (typeof (allAttr['data-hl']) !== 'undefined') {
+            var attrstrs = allAttr['data-hl'].split(';');
+            for ( var i in attrstrs) {
                 var attrs = attrstrs[i].split(':');
                 if (attrs.length >= 2) {
                     result[jQuery.trim(attrs[0])] = jQuery.trim(attrs[1]);
                 }
             }
-        } else if (typeof(allAttr['data-wpae-lang']) !== 'undefined') {
-            var startLenght = 'data-wpae-'.length;
-            for (var key in allAttr) {
+        } else if (typeof (allAttr['data-hl-lang']) !== 'undefined') {
+            var startLenght = 'data-hl-'.length;
+            for ( var key in allAttr) {
                 if (key.length > startLenght) {
                     result[key.substring(startLenght)] = allAttr[key];
                 }
@@ -181,33 +192,15 @@ var WpAceEditor = function(options) {
 
         for (var i = 0; i < items.length; i++) {
             var item = items.eq(i);
-            if (typeof(item.attr(this.ITEM_KEY)) !== 'undefined') {
+            if (typeof (item.attr(this.ITEM_KEY)) !== 'undefined') {
                 return;
             }
             this.reConvertItem(item);
         }
-
-        var delayFuns = this.delayFunctions;
-        function delay() {
-            for (var key in delayFuns) {
-                delayFuns[key]();
-            }
-        }
-
-        window.setTimeout(delay, 30);
     };
     /** 取得所有要转换的项目 */
     this.matchAllItems = function() {
-        var matchString = 'pre[data-wpae], code[data-wpae]';
-//        for (var tagi in this.options['convtag']) {
-//            for (var typei in this.options['convtype']) {
-//                if (matchString.length > 0) {
-//                    matchString += ',';
-//                }
-//                matchString += this.options['convtag'][tagi];
-//                matchString += '[' + this.options['convtype'][typei] + ']';
-//            }
-//        }
+        var matchString = 'pre[data-hl], code[data-hl]';
         return this.$(matchString);
     };
     /** 重新转换 */
@@ -216,24 +209,30 @@ var WpAceEditor = function(options) {
         var options = this.getOptions(item);
 
         var editor;
-        if (typeof(convid) === 'undefined') {
+        if (typeof (convid) === 'undefined') {
             this.convertedCount++;
             convid = '' + this.convertedCount;
             item.attr(this.ITEM_KEY, convid);
 
             var divItem = this.$('<div></div>');
             divItem.attr('id', this.DIV_KEY + convid);
-            // 宽度
-           divItem.css('width', options['width']);
+
             // 行高
             divItem.css('line-height', options['lineheight'] + '%');
-            divItem.css('position', 'relative');
             divItem.css('text-shadow', 'none');
-
-            // divItem.css('display', 'none');
+            if (item.get(0).nodeName.toLowerCase() === 'pre') {
+                // 宽度
+                divItem.css('width', options['width']);
+                divItem.css('position', 'relative');
+            } else {
+                divItem.css('position', 'absolute');
+                divItem.css('left', -9999);
+                divItem.css('top', -9999);
+                divItem.css('width', 100);
+                divItem.css('height', 100);
+            }
             item.after(divItem);
             editor = ace.edit(divItem.get(0));
-            editor.$blockScrolling = Infinity;
 
             this.convertedEditor[convid] = editor;
 
@@ -242,24 +241,41 @@ var WpAceEditor = function(options) {
             if (options['tabtospace']) {
                 value = value.replace(/\t/, '    ');
             }
-            editor.getSession().setValue(value);            
-            //if (item.get(0).nodeName.toLowerCase() === 'pre') {
-                item.hide();
-                divItem.show();
-            //}
+            editor.getSession().setValue(value);
+			
+			editor.renderer.moveTextAreaToCursor = function(textarea) {
+				 var pos = this.$cursorLayer.getPixelPosition();
+
+				 if (!pos) return;
+
+				 var bounds = this.content.getBoundingClientRect();
+				 var offset = this.layerConfig.offset;
+
+				 textarea.style.left = (bounds.left + pos.left) + "px";
+				 textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
+			};
+
+			editor.onFocus = function() {
+				this.renderer.showCursor();
+				this.renderer.visualizeFocus();
+				this._emit("focus");
+				this.renderer.moveTextAreaToCursor(this.textInput.getElement());
+			};
+
+            item.hide();
+            divItem.show();
         } else {
             editor = this.convertedEditor[convid];
             divItem = this.$('#' + this.DIV_KEY + convid);
         }
         // 设置属性
         this.resetOptions(editor, options);
-       if (item.get(0).nodeName.toLowerCase() === 'pre') {
-           // 設置高度
-           // this.delayFunctions[convid] = 
-           this.resizeEditor(divItem, editor, options);
-       } else {
-           // this.delayFunctions[convid] = this.setOneLineEdit(item, divItem, editor);
-       }
+        if (item.get(0).nodeName.toLowerCase() === 'pre') {
+            // 設置高度
+            this.resizeEditor(divItem, editor, options);
+        } else {
+            this.setOneLineEdit(item, divItem, editor);
+        }
 
         return editor;
     };
@@ -270,7 +286,11 @@ var WpAceEditor = function(options) {
         // 显示样式
         editor.setTheme('ace/theme/' + options['theme']);
         // 显示语言
-        editor.getSession().setMode('ace/mode/' + options['lang']);
+		if (options['lang'] === 'php-inline') {
+			editor.getSession().setMode({path: 'ace/mode/php', inline: true});
+		} else {
+			editor.getSession().setMode('ace/mode/' + options['lang']);
+		}
         // Tab宽度
         editor.getSession().setTabSize(options['tabsise']);
         // 文字大小
@@ -296,19 +316,21 @@ var WpAceEditor = function(options) {
     };
 
     /** 重新设置高度 */
-    this.resizeEditor = function  (divItem, editor, options) {
+    this.resizeEditor = function(divItem, editor, options) {
         editor.renderer.updateFull(true);
         var changeHeight = function(height) {
             return height + 7;
         };
 
         var lineHeight = editor.renderer.layerConfig.lineHeight;
-        var oldHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
+        var oldHeight = Math.ceil(editor.getSession().getScreenLength()
+                * lineHeight);
         oldHeight = changeHeight(oldHeight);
 
         var resize = function() {
             var lineHeight = editor.renderer.layerConfig.lineHeight;
-            var newHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
+            var newHeight = Math.ceil(editor.getSession().getScreenLength()
+                    * lineHeight);
 
             if (editor.renderer.$horizScroll) {
                 newHeight += editor.renderer.scrollBarH.height;
@@ -330,49 +352,41 @@ var WpAceEditor = function(options) {
     };
 
     /** 重新行内代码 */
-    this.setOneLineEdit = function (item, divItem, editor) {
+    this.setOneLineEdit = function(item, divItem, editor) {
+        var pSpanItem = jQuery('<span></span>');
+        pSpanItem.addClass('inline-hl');
+        item.after(pSpanItem);
+
+        var spanItem = jQuery('<span></span>');
+        spanItem.appendTo(pSpanItem);
+        spanItem.attr('class', divItem.attr('class'));
         var resize = function() {
-            var spanItem = jQuery('<span></span>');
-            item.after(spanItem);
-            spanItem.addClass(divItem.attr('class'));
-
-
-//
-//            var lineHeight = editor.renderer.layerConfig.lineHeight;
-//            var newHeight = Math.ceil(editor.getSession().getScreenLength() * lineHeight);
-//            if (editor.renderer.$horizScroll) {
-//                newHeight += editor.renderer.scrollBarH.height;
-//            }
-//            newHeight = changeHeight(newHeight);
-//
-//            if (oldHeight !== newHeight) {
-//                oldHeight = newHeight;
-//                divItem.height(newHeight);
-//                editor.resize();
-//            }
+            spanItem.attr('class', divItem.attr('class'));
+            spanItem.html(divItem.find('.ace_scroller .ace_content .ace_text-layer .ace_line').html());
         };
 
-        return resize;
+        editor.renderer.on('afterRender', resize);
     };
 
-    this.convertHtml = function(inserttag, inserttype, background, options, value) {
+    this.convertHtml = function(inserttag, inserttype, background, options,
+            value) {
         var result = '<' + inserttag;
         if (background != '') {
             result += ' style="background-color: ' + background + ';"';
         }
         if (inserttype === 'lang') {
-            for (var key in options) {
+            for ( var key in options) {
                 result += ' ' + key + '="' + options[key] + '"';
             }
-        } else if (inserttype === 'data-wpae') {
-            result += ' data-wpae="';
-            for (var key in options) {
+        } else if (inserttype === 'data-hl') {
+            result += ' data-hl="';
+            for ( var key in options) {
                 result += key + ':' + options[key] + ';';
             }
             result += '"';
-        } else if (inserttype === 'data-wpae-lang') {
-            for (var key in options) {
-                result += ' data-wpae-' + key + '="' + options[key] + '"';
+        } else if (inserttype === 'data-hl-lang') {
+            for ( var key in options) {
+                result += ' data-hl-' + key + '="' + options[key] + '"';
             }
         }
         result += '>\n';
@@ -381,28 +395,28 @@ var WpAceEditor = function(options) {
         return result;
     };
 
-    this.htmlEncode = function (value) {
+    this.htmlEncode = function(value) {
         var div = document.createElement("div");
         div.appendChild(document.createTextNode(value));
         return div.innerHTML;
     };
 
     this.changeOptions = new function() {
-        this.__int = function (value) {
+        this.__int = function(value) {
             var returnVal = parseInt(value);
             return isNaN(returnVal) ? null : returnVal;
         };
-        this.__boolean = function (value) {
-            if (typeof(value) === 'boolean') {
+        this.__boolean = function(value) {
+            if (typeof (value) === 'boolean') {
                 return value;
             }
             value = value.toLowerCase();
-            return ['1', 'yes', 'true'].indexOf(value) >= 0;
+            return [ '1', 'yes', 'true' ].indexOf(value) >= 0;
         };
-        this.__lowercase = function (value) {
+        this.__lowercase = function(value) {
             return value.toLowerCase();
         };
-        this.__value = function (value) {
+        this.__value = function(value) {
             return value;
         };
         // 代码只读
@@ -410,7 +424,7 @@ var WpAceEditor = function(options) {
         // 显示样式
         this.theme = this.__lowercase;
         // 显示语言
-        this.lang = function (value) {
+        this.lang = function(value) {
             value = value.toLowerCase();
             if (value == 'c' || value == 'cpp') {
                 value = 'c_cpp';
@@ -442,9 +456,10 @@ var WpAceEditor = function(options) {
         // 活动行高亮显示
         this.active = this.__boolean;
         // 代码收缩样式
-        this.foldstyle = function (value) {
+        this.foldstyle = function(value) {
             value = value.toLowerCase();
-            var valueList = ['none', 'manual', 'begin', 'markbegin', 'beginend', 'markbeginend'];
+            var valueList = [ 'none', 'manual', 'begin', 'markbegin',
+                    'beginend', 'markbeginend' ];
             var index = valueList.indexOf(value);
             if (index < 0) {
                 return null;
@@ -454,7 +469,6 @@ var WpAceEditor = function(options) {
         };
     };
 };
-
 
 function convertToAceEditor(options) {
     var aceEditor = new WpAceEditor(options);
