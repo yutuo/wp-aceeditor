@@ -44,8 +44,11 @@ class WpAceeditor {
     function insertHeadCss() {
         $html = <<<HTML
 <style type="text/css">
-code[data-hl] > div {
+div.onelinehl {
     display: inline-block;
+    line-height: 1.5;
+}
+div.onelinehl > div {
     padding: 0 5px;
     margin: 0 3px;
 }

@@ -154,7 +154,12 @@ var WpAceEditor = function(options) {
         if (options['tabtospace']) {
             value = value.replace(/\t/, '    ');
         }
-        var editor = ace.edit(item.get(0));
+        var divItem = this.$('<div></div>');
+        item.after(divItem);
+        item.hide();
+        divItem.show();
+
+        var editor = ace.edit(divItem.get(0));
         editor.setOptions({
             autoScrollEditorIntoView: true,
             maxLines: 999999999
@@ -162,11 +167,11 @@ var WpAceEditor = function(options) {
         editor.getSession().setValue(value);
         // 设置属性
         this.setOptions(editor, options);
-        editor.renderer.setScrollMargin(5, 5, 0, 0);
-        return editor;        
+        editor.renderer.setScrollMargin(8, 8, 0, 0);
+        return editor;
     };
 
-    /** 多行代码转换 */
+    /** 单行代码转换 */
     this.heightItem = function(item, options) {
         var highlighter = ace.require("ace/ext/static_highlight");
 
@@ -177,7 +182,14 @@ var WpAceEditor = function(options) {
         if (options['lang'] === 'php-inline') {
             mode = {path: 'ace/mode/php', inline: true};
         }
-        highlighter.highlight(item.get(0), {mode: mode, theme: theme});        
+
+        var divItem = this.$('<div class="onelinehl"></div>');
+        item.after(divItem);
+        divItem.html(item.html());
+        item.hide();
+        divItem.show();
+
+        highlighter.highlight(divItem.get(0), {mode: mode, theme: theme});
     };
 
     /** 取得属性 */
@@ -236,7 +248,7 @@ var WpAceEditor = function(options) {
 
         return result;
     };
-    
+
     /** 设置属性 */
     this.setOptions = function(editor, options) {
         // 代码只读
@@ -244,11 +256,11 @@ var WpAceEditor = function(options) {
         // 显示样式
         editor.setTheme('ace/theme/' + options['theme']);
         // 显示语言
-		if (options['lang'] === 'php-inline') {
-			editor.getSession().setMode({path: 'ace/mode/php', inline: true});
-		} else {
-			editor.getSession().setMode('ace/mode/' + options['lang']);
-		}
+        if (options['lang'] === 'php-inline') {
+            editor.getSession().setMode({path: 'ace/mode/php', inline: true});
+        } else {
+            editor.getSession().setMode('ace/mode/' + options['lang']);
+        }
         // Tab宽度
         editor.getSession().setTabSize(options['tabsise']);
         // 文字大小
