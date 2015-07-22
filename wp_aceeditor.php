@@ -46,26 +46,8 @@ class WpAceeditor {
 <style type="text/css">
 .ace_editor .ace_gutter,
 .ace_editor .ace_scroller {padding-top: 3px;}
-.ace_editor {margin-bottom: 20px;}
-/* Let's get this party started */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 8px;
-}
- 
-/* Track */
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.3); 
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: rgba(255,0,0,0.8); 
-    -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.5); 
-}
-::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(255,0,0,0.4); 
-}
+.ace_editor {margin: -9px 0 10px 0;}
+.inline-hl .ace_editor {margin: 0px 2px; padding: 1px 3px 1px 4px;}
 </style>
 HTML;
         echo $html;
