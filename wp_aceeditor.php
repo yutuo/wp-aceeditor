@@ -44,10 +44,11 @@ class WpAceeditor {
     function insertHeadCss() {
         $html = <<<HTML
 <style type="text/css">
-.ace_editor .ace_gutter,
-.ace_editor .ace_scroller {padding-top: 3px;}
-.ace_editor {margin: -9px 0 10px 0;}
-.inline-hl .ace_editor {margin: 0px 2px; padding: 1px 3px 1px 4px;}
+code[data-hl] > div {
+    display: inline-block;
+    padding: 0 5px;
+    margin: 0 3px;
+}
 </style>
 HTML;
         echo $html;
@@ -56,6 +57,7 @@ HTML;
     function insertFootJs() {
         $html = <<<HTML
 <script type="text/javascript" src="{$this->currentUrl}/js/ace/ace.js"></script>
+<script type="text/javascript" src="{$this->currentUrl}/js/ace/ext-static_highlight.js"></script>
 <script type="text/javascript" src="{$this->currentUrl}/js/wpaceeditor.js"></script>
 <script type="text/javascript">
 (function(){

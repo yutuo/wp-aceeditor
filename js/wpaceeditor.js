@@ -121,14 +121,64 @@
 }));
 ace.config.set("basePath", "/wp-content/plugins/wp-aceeditor/js/ace");
 var WpAceEditor = function(options) {
-    this.ITEM_KEY = 'data-hl-id';
-    this.DIV_KEY = 'WpAceEditor_';
-
     this.$ = jQuery;
     this.options = options;
-    this.convertedEditor = [];
-    this.delayFunctions = [];
-    this.convertedCount = 0;
+
+    /** 转换所有项目 */
+    this.convertAll = function() {
+        var items = this.matchAllItems();
+        for (var i = 0; i < items.length; i++) {
+            var item = items.eq(i);
+            var options = this.getOptions(item);
+
+            if (item.get(0).nodeName.toLowerCase() === 'pre') {
+                // 多行代码转换
+                this.convertItem(item, options);
+            } else {
+                // 行内代码转换
+                this.heightItem(item, options);
+            }
+        }
+    };
+
+    /** 取得所有要转换的项目 */
+    this.matchAllItems = function() {
+        var matchString = 'pre[data-hl], code[data-hl]';
+        return this.$(matchString);
+    };
+
+    /** 多行代码转换 */
+    this.convertItem = function(item, options) {
+        var value = item.text().replace(/^(\s*?[\r\n]+)+/, '');
+        value = value.replace(/\s+$/, '');
+        if (options['tabtospace']) {
+            value = value.replace(/\t/, '    ');
+        }
+        var editor = ace.edit(item.get(0));
+        editor.setOptions({
+            autoScrollEditorIntoView: true,
+            maxLines: 999999999
+        });
+        editor.getSession().setValue(value);
+        // 设置属性
+        this.setOptions(editor, options);
+        editor.renderer.setScrollMargin(5, 5, 0, 0);
+        return editor;        
+    };
+
+    /** 多行代码转换 */
+    this.heightItem = function(item, options) {
+        var highlighter = ace.require("ace/ext/static_highlight");
+
+        // 显示样式
+        var theme = "ace/theme/" + options['theme'];
+        // 显示语言
+        var mode = 'ace/mode/' + options['lang'];
+        if (options['lang'] === 'php-inline') {
+            mode = {path: 'ace/mode/php', inline: true};
+        }
+        highlighter.highlight(item.get(0), {mode: mode, theme: theme});        
+    };
 
     /** 取得属性 */
     this.getOptions = function(item) {
@@ -186,101 +236,9 @@ var WpAceEditor = function(options) {
 
         return result;
     };
-    /** 转换所有项目 */
-    this.convertAll = function() {
-        var items = this.matchAllItems();
-
-        for (var i = 0; i < items.length; i++) {
-            var item = items.eq(i);
-            if (typeof (item.attr(this.ITEM_KEY)) !== 'undefined') {
-                return;
-            }
-            this.reConvertItem(item);
-        }
-    };
-    /** 取得所有要转换的项目 */
-    this.matchAllItems = function() {
-        var matchString = 'pre[data-hl], code[data-hl]';
-        return this.$(matchString);
-    };
-    /** 重新转换 */
-    this.reConvertItem = function(item) {
-        var convid = item.attr(this.ITEM_KEY);
-        var options = this.getOptions(item);
-
-        var editor;
-        if (typeof (convid) === 'undefined') {
-            this.convertedCount++;
-            convid = '' + this.convertedCount;
-            item.attr(this.ITEM_KEY, convid);
-
-            var divItem = this.$('<div></div>');
-            divItem.attr('id', this.DIV_KEY + convid);
-
-            // 行高
-            divItem.css('line-height', options['lineheight'] + '%');
-            divItem.css('text-shadow', 'none');
-            if (item.get(0).nodeName.toLowerCase() === 'pre') {
-                // 宽度
-                divItem.css('width', options['width']);
-                divItem.css('position', 'relative');
-            } else {
-                divItem.css('position', 'absolute');
-                divItem.css('left', -9999);
-                divItem.css('top', -9999);
-                divItem.css('width', 100);
-                divItem.css('height', 100);
-            }
-            item.after(divItem);
-            editor = ace.edit(divItem.get(0));
-
-            this.convertedEditor[convid] = editor;
-
-            var value = item.text().replace(/^(\s*?[\r\n]+)+/, '');
-            value = value.replace(/\s+$/, '');
-            if (options['tabtospace']) {
-                value = value.replace(/\t/, '    ');
-            }
-            editor.getSession().setValue(value);
-			
-			editor.renderer.moveTextAreaToCursor = function(textarea) {
-				 var pos = this.$cursorLayer.getPixelPosition();
-
-				 if (!pos) return;
-
-				 var bounds = this.content.getBoundingClientRect();
-				 var offset = this.layerConfig.offset;
-
-				 textarea.style.left = (bounds.left + pos.left) + "px";
-				 textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
-			};
-
-			editor.onFocus = function() {
-				this.renderer.showCursor();
-				this.renderer.visualizeFocus();
-				this._emit("focus");
-				this.renderer.moveTextAreaToCursor(this.textInput.getElement());
-			};
-
-            item.hide();
-            divItem.show();
-        } else {
-            editor = this.convertedEditor[convid];
-            divItem = this.$('#' + this.DIV_KEY + convid);
-        }
-        // 设置属性
-        this.resetOptions(editor, options);
-        if (item.get(0).nodeName.toLowerCase() === 'pre') {
-            // 設置高度
-            this.resizeEditor(divItem, editor, options);
-        } else {
-            this.setOneLineEdit(item, divItem, editor);
-        }
-
-        return editor;
-    };
-    /** 重新设置属性 */
-    this.resetOptions = function(editor, options) {
+    
+    /** 设置属性 */
+    this.setOptions = function(editor, options) {
         // 代码只读
         editor.setReadOnly(options['readonly']);
         // 显示样式
@@ -313,92 +271,6 @@ var WpAceEditor = function(options) {
         editor.getSession().setFoldStyle(options['foldstyle']);
 
         return editor;
-    };
-
-    /** 重新设置高度 */
-    this.resizeEditor = function(divItem, editor, options) {
-        editor.renderer.updateFull(true);
-        var changeHeight = function(height) {
-            return height + 7;
-        };
-
-        var lineHeight = editor.renderer.layerConfig.lineHeight;
-        var oldHeight = Math.ceil(editor.getSession().getScreenLength()
-                * lineHeight);
-        oldHeight = changeHeight(oldHeight);
-
-        var resize = function() {
-            var lineHeight = editor.renderer.layerConfig.lineHeight;
-            var newHeight = Math.ceil(editor.getSession().getScreenLength()
-                    * lineHeight);
-
-            if (editor.renderer.$horizScroll) {
-                newHeight += editor.renderer.scrollBarH.height;
-            }
-            newHeight = changeHeight(newHeight);
-
-            if (oldHeight !== newHeight) {
-                oldHeight = newHeight;
-                divItem.height(newHeight);
-                editor.resize();
-            }
-        };
-
-        divItem.height(oldHeight);
-        editor.resize();
-
-        editor.renderer.on('scrollbarVisibilityChanged', resize);
-        editor.getSession().on('changeFold', resize);
-    };
-
-    /** 重新行内代码 */
-    this.setOneLineEdit = function(item, divItem, editor) {
-        var pSpanItem = jQuery('<span></span>');
-        pSpanItem.addClass('inline-hl');
-        item.after(pSpanItem);
-
-        var spanItem = jQuery('<span></span>');
-        spanItem.appendTo(pSpanItem);
-        spanItem.attr('class', divItem.attr('class'));
-        var resize = function() {
-            spanItem.attr('class', divItem.attr('class'));
-            spanItem.html(divItem.find('.ace_scroller .ace_content .ace_text-layer .ace_line').html());
-        };
-
-        editor.renderer.on('afterRender', resize);
-    };
-
-    this.convertHtml = function(inserttag, inserttype, background, options,
-            value) {
-        var result = '<' + inserttag;
-        if (background != '') {
-            result += ' style="background-color: ' + background + ';"';
-        }
-        if (inserttype === 'lang') {
-            for ( var key in options) {
-                result += ' ' + key + '="' + options[key] + '"';
-            }
-        } else if (inserttype === 'data-hl') {
-            result += ' data-hl="';
-            for ( var key in options) {
-                result += key + ':' + options[key] + ';';
-            }
-            result += '"';
-        } else if (inserttype === 'data-hl-lang') {
-            for ( var key in options) {
-                result += ' data-hl-' + key + '="' + options[key] + '"';
-            }
-        }
-        result += '>\n';
-        result += this.htmlEncode(value);
-        result += '\n</' + inserttag + '>';
-        return result;
-    };
-
-    this.htmlEncode = function(value) {
-        var div = document.createElement("div");
-        div.appendChild(document.createTextNode(value));
-        return div.innerHTML;
     };
 
     this.changeOptions = new function() {

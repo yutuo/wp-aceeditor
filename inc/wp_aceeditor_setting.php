@@ -218,16 +218,11 @@ func();
                 }
             }
         }
-
         options['lang'] = $('#lang').val();
-        for (var key in options) {
-            wpAceEditor.options[key] = options[key];
-        }
-
         if (editor) {
-            wpAceEditor.resetOptions(editor, wpAceEditor.options);
+            wpAceEditor.setOptions(editor, options);
         } else {
-            editor = wpAceEditor.reConvertItem($('#testAceEditor'));
+            editor = wpAceEditor.convertItem($('#testAceEditor'), options);
         }
     }
     (function(){
