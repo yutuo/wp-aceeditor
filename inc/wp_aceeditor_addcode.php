@@ -174,7 +174,7 @@
             editor = ace.edit('insertCodePre');
         }
         options['readonly'] = false;
-        wpAceEditor.resetOptions(editor, options);
+        wpAceEditor.setOptions(editor, options);
     }
 
     function setSetedLang(flag) {
